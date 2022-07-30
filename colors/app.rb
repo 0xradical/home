@@ -22,3 +22,40 @@ end.map do |a|
 end.sort_by do |props|
   props[:delta_E]
 end
+
+sw_azul = Nokogiri::HTML(File.read("sw_azul.html"))
+sw_azul.css(".wrap-cores li a").map do |a|
+  hex = a.attributes["data-cor"].value
+  name = a.attributes["data-titulo"].value
+  link = a.attributes["href"].value
+  color = Color::RGB.by_hex(hex)
+  delta_E = ICELANDIC_SW.delta_e94(color.to_lab, ICELANDIC_SW.to_lab)
+
+  {
+    name: name,
+    link: link,
+    color: color,
+    delta_E: delta_E
+  }
+end.sort_by do |props|
+  props[:delta_E]
+end
+
+coral_azul = Nokogiri::HTML(File.read("coral_azul.html"))
+coral_azul.css(".m7-color-card").map do |div|
+
+  hex = div.attributes["data-hex"].value.sub("#","")
+  name = div.attributes["data-label"].value
+  link = nil
+  color = Color::RGB.by_hex(hex)
+  delta_E = ICELANDIC_SW.delta_e94(color.to_lab, ICELANDIC_SW.to_lab)
+
+  {
+    name: name,
+    link: link,
+    color: color,
+    delta_E: delta_E
+  }
+end.sort_by do |props|
+  props[:delta_E]
+end
